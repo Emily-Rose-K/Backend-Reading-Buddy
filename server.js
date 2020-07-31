@@ -11,7 +11,7 @@ const app = express()
 const users = require('./routes/users')
 //const readerExperiences = require('./routes/readerExperiences');
 const books = require('./routes/books');
-const readerExperiences = require('./routes/readerExperiences');
+const readerExperiences = require('./routes/readerexperiences');
 
 //middleware for CORS requests
 app.use(function(req, res, next) {
