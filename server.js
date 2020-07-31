@@ -3,6 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const app = express()
 
@@ -14,6 +15,11 @@ const books = require('./routes/books');
 const readerExperiences = require('./routes/readerexperiences');
 
 //middleware for CORS requests
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  optionsSuccessStatus: 200
+}))
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
