@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-const uri = process.env.MONGOD_URI
+const uri = process.env.MONGODB_URI
 
 // connect to db
 const MongoClient = require('mongodb').MongoClient;

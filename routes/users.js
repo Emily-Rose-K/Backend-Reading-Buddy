@@ -10,6 +10,7 @@ const passport = require('passport')
 const User = require('../models/User')
 const Book = require('../models/Book')
 const ReaderExperience = require('../models/ReaderExperience')
+console.log(`⁉️This is Model: ${ReaderExperience}`);
 
 //API ROUTES
 //user test route
@@ -17,22 +18,60 @@ router.get('/test', function(req, res) {
     res.json({msg: "Users route working"})
 })
 //Get a user by id for profiles
+/*
+const populateExperiences = (idList, experienceList, user) => {
+    if (idList.length === 0) {
+        user.readerExperiences = experienceList;
+        res.send({user});
+        return experienceList;
+    } else {
+        console.log(`About to pluck off experience ${idList[0]}`)
+        ReaderExperience.find({_id: idList.shift()})
+            .then(thisExperience => {
+                console.log(`found experience ${JSON.stringify(thisExperience)}`);
+                experienceList.push(thisExperience);
+                populateExperiences(idList, experienceList, user);
+            })
+            .catch(err => {
+                console.log(`Error in populateExperiences: ${err}`);
+            })
+    }
+}
+
+router.get('/:id', (req, res) => {
+    User.findOne({_id: req.params.id})
+        .populate('friends')
+        .then(user => {
+            console.log(`passing ${user.readerExperiences} to populateExperiences`);
+            populateExperiences(user.readerExperiences, [], user);
+        })
+        .catch(err => {
+            console.log(`Error in alternate user/:id route: ${err}`);
+        })
+})
+*/
+
+
 router.get('/:id', (req, res) => {
     console.log("In users.js get /:id method")
     User.findOne({_id: req.params.id})
-        .populate({
-            path: 'readerExperiences',
-            populate: 'book'
-        })
-        .populate({
-            path: 'friends'
-        })
+        .populate([
+            {
+                path: 'readerExperiences',
+                model: 'ReaderExperience',
+                populate: 'book'
+            }, {
+                path: 'friends'
+            }
+        ])
         .then(user => {
             res.send({user})
         })
         .catch(err => {
             res.send({error: `Error getting user: ${err}`});
-        })    
+        })
+})    
+   
     /*  
         /users/:id returns an object with this structure:
         {
@@ -75,9 +114,10 @@ router.get('/:id', (req, res) => {
         }
 
     */
-})
+
 
 router.get('/', (req,res) => {
+    console.log("in users get route with req.query " + JSON.stringify(req.query));
     User.find(req.query)
         .then(searchResults => {
             res.send({searchResults})
