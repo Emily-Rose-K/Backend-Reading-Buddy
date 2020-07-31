@@ -13,9 +13,6 @@ const BookSchema = new Schema({
     author: {
         type: String,
     },
-    genre: {
-        type: String,
-    },
     image_url: {
         type: String,
     },
@@ -24,8 +21,8 @@ const BookSchema = new Schema({
     },
     readerExperiences: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ReaderExperiences"
+        ref: "ReaderExperience"
     }]
 })
 
-module.exports = Book = mongoose.model('Book', BookSchema)
+module.exports = mongoose.model('Book', BookSchema)
