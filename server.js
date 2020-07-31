@@ -19,14 +19,14 @@ app.use(cors({
   origin: process.env.CLIENT_URL,
   optionsSuccessStatus: 200
 }))
-/*
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
     res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
     next()
 })
-*/
+
 //bodyParser middleware
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
