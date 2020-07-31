@@ -44,8 +44,9 @@ app.use(passport.initialize())
 //setup routes
 //app.use('/users', users)
 
-app.use('/readerExperiences', readerExperiences);
+
 app.use("/books", books);
+app.use('/readerExperiences', readerExperiences);
 app.use("/users", users);
 
 //start server
