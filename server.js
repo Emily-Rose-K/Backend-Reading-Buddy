@@ -10,7 +10,11 @@ const app = express()
 //require routers here:
 //TODO: require routes for Books, User-experience etc...
 const users = require('./routes/users')
+<<<<<<< HEAD
 //const readerExperiences = require('./routes/readerExperiences');
+=======
+const readerExperiences = require('./routes/ReaderExperiences');
+>>>>>>> 7a6acc31c8f4a722c4e1aa74bf696c25502e8faa
 const books = require('./routes/books');
 const readerExperiences = require('./routes/readerexperiences');
 
