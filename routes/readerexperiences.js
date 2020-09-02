@@ -59,7 +59,6 @@ router.get('/:id', (req,res) => {
     ReaderExperience.findById(req.params.id)
         .populate('book')
         .then(readerExperience => {
-            console.log(`🟣🟣🟣🟣 found user experience: ${JSON.stringify(readerExperience)}`)
             res.send(readerExperience)
         })
         .catch(err => {
