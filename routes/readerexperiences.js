@@ -55,9 +55,22 @@ router.post('/', (req,res) => {     // assumes req.body structure of {req.query:
         })
 })
 
+router.get('/:id', (req,res) => {
+    ReaderExperience.findById(req.params.id)
+        .populate('book')
+        .then(readerExperience => {
+            res.send(readerExperience)
+        })
+        .catch(err => {
+            res.send({error: `Error in readerExperience route Show method while finding experience: ${err}`})
+        })
+})
+
 router.put('/:id', (req,res) => {
-    ReaderExperience.findOneAndUpdate(req.params.id, {$set: req.body}, {new: true, runValidators: true})
+    console.log(`incoming id: ${req.params.id}`)
+    ReaderExperience.findOneAndUpdate({_id: req.params.id}, {$set: req.body}, {new: true, runValidators: true})
         .then(updatedReaderExperience => {
+            console.log(`🟣🟣🟣🟣 updated readerExperience: ${JSON.stringify(updatedReaderExperience)}`)
             res.send({updatedReaderExperience})
         })
         .catch(err => {

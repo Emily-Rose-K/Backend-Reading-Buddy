@@ -3,16 +3,27 @@ const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const app = express()
 
 //require routers here:
 //TODO: require routes for Books, User-experience etc...
 const users = require('./routes/users')
+<<<<<<< HEAD
+//const readerExperiences = require('./routes/readerExperiences');
+=======
 const readerExperiences = require('./routes/ReaderExperiences');
+>>>>>>> 7a6acc31c8f4a722c4e1aa74bf696c25502e8faa
 const books = require('./routes/books');
+const readerExperiences = require('./routes/readerexperiences');
 
 //middleware for CORS requests
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  optionsSuccessStatus: 200
+}))
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
@@ -24,7 +35,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-const uri = process.env.MONGODB_URI
+const uri = process.env.MONGOD_URI
 
 // connect to db
 const MongoClient = require('mongodb').MongoClient;
@@ -44,9 +55,10 @@ app.use(passport.initialize())
 //setup routes
 //app.use('/users', users)
 
-app.use('/readerExperiences', readerExperiences);
+
 app.use("/books", books);
-app.use("/users", users);
+app.use('/readerExperiences', readerExperiences);
+app.use("/users", cors(), users);
 
 //start server
 app.listen(process.env.PORT || 3001, () => console.log(`Server is running on ${process.env.PORT} and things are smooth`))
