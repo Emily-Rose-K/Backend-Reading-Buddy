@@ -67,8 +67,10 @@ router.get('/:id', (req,res) => {
 })
 
 router.put('/:id', (req,res) => {
-    ReaderExperience.findOneAndUpdate(req.params.id, {$set: req.body}, {new: true, runValidators: true})
+    console.log(`incoming id: ${req.params.id}`)
+    ReaderExperience.findOneAndUpdate({_id: req.params.id}, {$set: req.body}, {new: true, runValidators: true})
         .then(updatedReaderExperience => {
+            console.log(`🟣🟣🟣🟣 updated readerExperience: ${JSON.stringify(updatedReaderExperience)}`)
             res.send({updatedReaderExperience})
         })
         .catch(err => {
