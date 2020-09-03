@@ -33,8 +33,6 @@ app.use(bodyParser.json())
 const uri = process.env.MONGOD_URI
 const uri_deploy = process.env.MONGOD_URI4
 
-const MongoClient = require('mongodb').MongoClient;
-
 // connect to db
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(uri_deploy, { useNewUrlParser: true });
@@ -46,6 +44,9 @@ client.connect(err => {
 
 mongoose.connect(uri_deploy).then((() => console.log('MONGOOSE CONNECTED'))).catch(error => console.log(error))
 
+app.get('/', function(req, res) {
+  res.send('Backend server is up & running')
+})
 
 app.use(passport.initialize())
 //TODO: make config folder and passport page
