@@ -10,11 +10,6 @@ const app = express()
 //require routers here:
 //TODO: require routes for Books, User-experience etc...
 const users = require('./routes/users')
-<<<<<<< HEAD
-//const readerExperiences = require('./routes/readerExperiences');
-=======
-const readerExperiences = require('./routes/ReaderExperiences');
->>>>>>> 7a6acc31c8f4a722c4e1aa74bf696c25502e8faa
 const books = require('./routes/books');
 const readerExperiences = require('./routes/readerexperiences');
 
@@ -36,17 +31,20 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 const uri = process.env.MONGOD_URI
+const uri_deploy = process.env.MONGOD_URI4
+
+const MongoClient = require('mongodb').MongoClient;
 
 // connect to db
 const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(uri, { useNewUrlParser: true });
+const client = new MongoClient(uri_deploy, { useNewUrlParser: true });
 client.connect(err => {
   const collection = client.db("test").collection("devices");
   // perform actions on the collection object
   client.close();
 });
 
-mongoose.connect(uri).then((() => console.log('MONGOOSE CONNECTED'))).catch(error => console.log(error))
+mongoose.connect(uri_deploy).then((() => console.log('MONGOOSE CONNECTED'))).catch(error => console.log(error))
 
 
 app.use(passport.initialize())
