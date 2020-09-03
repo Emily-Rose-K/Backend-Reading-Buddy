@@ -1,1 +1,1 @@
-web: node server_deploy.js
+web: node server.js
