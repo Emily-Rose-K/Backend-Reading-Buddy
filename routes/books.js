@@ -8,6 +8,20 @@ const User = require("../models/User");
 //const SEEDFILE = require('../seed2.js'); 
 const BIG_OL_LIST = require('../seed2.js');
 
+router.get('/', (req, res) => {
+    let titleRegex = `*${req.query.title}*`
+    let authorRegex = `*${req.query.author}*`
+    Book.find({title: { $regex: req.query.title, $options: 'i' }, author: { $regex: req.query.author, $options: 'i'}})
+        .limit(10)
+        .then(books => {
+            console.log(`🔵🔵🔵🔵 Book search successful.  books: ${JSON.stringify(books)}`)
+            res.send({books})
+        })
+        .catch(err => {
+            console.log(`🔴🔴🔴🔴 error in book search: ${JSON.stringify(err)}`)
+        })
+})
+
 router.get("/:api_id", (req,res) => {
     Book.find({title: req.query.title, author: req.query.author}) // we want reviews for all editions of the book, not just the one specified by req.params.api_id
         .populate("readerExperiences")
