@@ -22,20 +22,24 @@ router.get('/', (req, res) => {
         })
 })
 
-router.get("/:api_id", (req,res) => {
-    Book.find({title: req.query.title, author: req.query.author}) // we want reviews for all editions of the book, not just the one specified by req.params.api_id
-        .populate("readerExperiences")
-        .then(booksInfo => {
-            let readerExperiencesInfo = [];
-            booksInfo.forEach(book => {
-                readerExperiencesInfo.concat(book.readerExperiences);
-            })
-            readerExperiencesInfo.forEach((experience, index) => {
+router.get("/:id", (req,res) => {
+    console.log(`🟣🟣🟣🟣 in book show route`)
+    Book.findById(req.params.id)
+        .populate([
+            {
+                path: 'readerExperiences',
+                model: 'ReaderExperience',
+                populate: 'user'
+            }
+        ])
+        .then(bookInfo => {
+            bookInfo.readerExperiences.forEach((experience, index) => {
                 if (!experience.rating && !experience.review) {
-                    readerExperiencesInfo.splice(index, 1);
+                    bookInfo.readerExperiences.splice(index, 1);
                 }
             })
-            res.send({readerExperiencesInfo});
+            console.log(`Sending response: ${JSON.stringify(bookInfo)}`)
+            res.send({bookInfo});
         })
         .catch(err => {
             res.send({error: `Error in books controller show route: ${err}`});
