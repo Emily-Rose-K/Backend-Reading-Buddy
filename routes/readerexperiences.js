@@ -12,28 +12,28 @@ router.post('/', (req,res) => {
         .then(experience => {
             if (experience) {
                 res.send({error: "User already has an experience with this book"})
+            } else {
+                ReaderExperience.create(req.body) 
+                    .then(createdReaderExperience => {
+                        Book.findOneAndUpdate({_id: createdReaderExperience.book}, {$push: {readerExperiences: createdReaderExperience._id}})
+                        .then(bookUpdateResult => {
+                            User.findOneAndUpdate({_id: createdReaderExperience.user}, {$push: {readerExperiences: createdReaderExperience._id}})
+                            .then(userUpdateResult => {
+                                res.send({createdReaderExperience})
+                            })
+                            .catch(err => {
+                                res.send({error: `Error in readerExperiences create route adding experience id to user experience list: ${err}`})
+                            })
+                        })
+                        .catch(err => {
+                            res.send({error: `Error adding new user experience id to book readerExperience list: ${err}`});
+                        })
+                    })
+                    .catch(err => {
+                        res.send({error: `Error in readerExperience router Create method while creating readerExperience: ${err}`});
+                    })
             }
         })
-    ReaderExperience.create(req.body) 
-        .then(createdReaderExperience => {
-            Book.findOneAndUpdate({_id: createdReaderExperience.book}, {$push: {readerExperiences: createdReaderExperience._id}})
-            .then(bookUpdateResult => {
-                User.findOneAndUpdate({_id: createdReaderExperience.user}, {$push: {readerExperiences: createdReaderExperience._id}})
-                .then(userUpdateResult => {
-                    res.send({createdReaderExperience})
-                })
-                .catch(err => {
-                    res.send({error: `Error in readerExperiences create route adding experience id to user experience list: ${err}`})
-                })
-            })
-            .catch(err => {
-                res.send({error: `Error adding new user experience id to book readerExperience list: ${err}`});
-            })
-        })
-        .catch(err => {
-            res.send({error: `Error in readerExperience router Create method while creating readerExperience: ${err}`});
-        })
-    }
 })
 
 router.get('/:id', (req,res) => {
