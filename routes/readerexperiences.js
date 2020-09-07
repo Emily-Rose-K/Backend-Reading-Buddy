@@ -36,8 +36,8 @@ router.post('/', (req,res) => {
         })
 })
 
-router.get('/:id', (req,res) => {
-    ReaderExperience.findById(req.params.id)
+router.get('/', (req,res) => {
+    ReaderExperience.findOne({book: req.query.book, user: req.query.user})
         .populate('book')
         .then(readerExperience => {
             console.log(`returning experience ${JSON.stringify(readerExperience)}`)
