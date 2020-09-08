@@ -11,7 +11,14 @@ router.post('/', (req,res) => {
     ReaderExperience.findOne({book: req.body.book, user: req.body.user})
         .then(experience => {
             if (experience) {
-                res.send({error: "User already has an experience with this book"})
+                ReaderExperience.findOneAndUpdate({book: req.body.book, user:req.body.user}, {$set: {status: req.body.status}}, {new: true, runValidators: true})
+                    .then(updatedExperience => {
+                        console.log(`reader experience updated to ${updatedExperience.status}`)
+                        res.send(updatedExperience)
+                    })
+                    .catch(err => {
+                        res.send({error: `Error while updating experience in create readerexperience route: ${err}`})
+                    })
             } else {
                 ReaderExperience.create(req.body) 
                     .then(createdReaderExperience => {
@@ -19,7 +26,7 @@ router.post('/', (req,res) => {
                         .then(bookUpdateResult => {
                             User.findOneAndUpdate({_id: createdReaderExperience.user}, {$push: {readerExperiences: createdReaderExperience._id}})
                             .then(userUpdateResult => {
-                                res.send({createdReaderExperience})
+                                res.send(createdReaderExperience)
                             })
                             .catch(err => {
                                 res.send({error: `Error in readerExperiences create route adding experience id to user experience list: ${err}`})

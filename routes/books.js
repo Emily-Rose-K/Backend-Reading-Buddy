@@ -33,11 +33,11 @@ router.get("/:id", (req,res) => {
             }
         ])
         .then(bookInfo => {
-            bookInfo.readerExperiences.forEach((experience, index) => {
-                if (!experience.rating && !experience.review) {
-                    bookInfo.readerExperiences.splice(index, 1);
-                }
-            })
+            //bookInfo.readerExperiences.forEach((experience, index) => {
+            //    if (!experience.rating && !experience.review) {
+            //        bookInfo.readerExperiences.splice(index, 1);
+            //    }
+            //})
             console.log(`Sending response: ${JSON.stringify(bookInfo)}`)
             res.send({bookInfo});
         })
