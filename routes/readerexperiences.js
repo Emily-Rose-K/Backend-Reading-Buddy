@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router()
 
-//const db = require('../../models')
-
 const ReaderExperience = require('../models/ReaderExperience');
 const Book = require('../models/Book');
 const User = require('../models/User');
