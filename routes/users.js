@@ -6,52 +6,14 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 
-// load User model
 const User = require('../models/User')
 const Book = require('../models/Book')
 const ReaderExperience = require('../models/ReaderExperience')
-console.log(`⁉️This is Model: ${ReaderExperience}`);
 
-//API ROUTES
-//user test route
 router.get('/test', function(req, res) {
     res.json({msg: "Users route working"})
 })
-//Get a user by id for profiles
-/*
-const populateExperiences = (idList, experienceList, user) => {
-    if (idList.length === 0) {
-        user.readerExperiences = experienceList;
-        res.send({user});
-        return experienceList;
-    } else {
-        console.log(`About to pluck off experience ${idList[0]}`)
-        ReaderExperience.find({_id: idList.shift()})
-            .then(thisExperience => {
-                console.log(`found experience ${JSON.stringify(thisExperience)}`);
-                experienceList.push(thisExperience);
-                populateExperiences(idList, experienceList, user);
-            })
-            .catch(err => {
-                console.log(`Error in populateExperiences: ${err}`);
-            })
-    }
-}
 
-router.get('/:id', (req, res) => {
-    User.findOne({_id: req.params.id})
-        .populate('friends')
-        .then(user => {
-            console.log(`passing ${user.readerExperiences} to populateExperiences`);
-            populateExperiences(user.readerExperiences, [], user);
-        })
-        .catch(err => {
-            console.log(`Error in alternate user/:id route: ${err}`);
-        })
-})
-*/
-
-//GET route to handle registration
 router.post('/register', (req, res) => {
     User.findOne({ email: req.body.email })
         .then(user => {
@@ -89,6 +51,7 @@ router.post('/register', (req, res) => {
 })
 
 router.post('/login', function(req, res) {
+    console.log("⚛️in backend /users/login route");
     const email = req.body.email
     const password = req.body.password
 
@@ -155,11 +118,7 @@ router.put('/:id/update', (req,res) => {
     }
 })
 
-
-
-
 router.get('/:id', (req, res) => {
-    console.log("In users.js get /:id method")
     User.findOne({_id: req.params.id})
         .populate([
             {
@@ -171,59 +130,55 @@ router.get('/:id', (req, res) => {
             }
         ])
         .then(user => {
+            console.log(JSON.stringify(user));
             res.send({user})
         })
         .catch(err => {
             res.send({error: `Error getting user: ${err}`});
         })
 })    
-   
-    /*  
-        /users/:id returns an object with this structure:
-        {
-            _id: blah,                  // the id of the user whose information is below
-            first_name: blah,
-            last_name: blah,
-            user_name: blah,
-            email: blah,
-            friends: [                  // a list of your friends' user objects
-                {
-                    _id: blah,
-                    first_name: blah,
-                    last_name: blah,
-                    user_name: blah,
-                    email: blah,
-                }
-            ],
-            readerExperiences: [        // a list of your readerExperiences
-                {
-                    _id: blah,          // the id of this readerExperience
-                    rating: blah,
-                    review: blah,
-                    status: "wishlist" or "started" or "finished"
-                    date_started: some date,
-                    date_finished: some date,
-                    book: {             // the book this experience is about
-                        _id: blah       // the id of the book in the database
-                        api_id: blah,   // the id of the book on Google Books
-                        title: blah,
-                        author: blah,
-                        genre: blah,
-                        image_url: blah,
-                        description: blah,
-                        readerExperiences: [ a list of ids of all the other readerExperience for this book]
 
-                    }
-                }
-            ]
+/*  
+    /users/:id returns an object with this structure:
+    {
+        _id: blah,
+        first_name: blah,
+        last_name: blah,
+        user_name: blah,
+        email: blah,
+        friends: [                  // a list of your friends' user objects
+            {
+                _id: blah,
+                first_name: blah,
+                last_name: blah,
+                user_name: blah,
+                email: blah,
             }
+        ],
+        readerExperiences: [        // a list of your readerExperiences
+            {
+                _id: blah, 
+                rating: blah,
+                review: blah,
+                status: "wishlist" or "started" or "finished"
+                date_started: some date,
+                date_finished: some date,
+                book: {             // the book this experience is about
+                    _id: blah       // the id of the book in the database
+                    api_id: blah,   // the ISBN of the book
+                    title: blah,
+                    author: blah,
+                    genre: blah,
+                    image_url: blah,
+                    description: blah,
+                    readerExperiences: [ a list of ids of all the other readerExperience for this book]
+
+                }
+            }
+        ]
         }
+    }
 
-    */
+*/
 
-
-
-
-//GET log people in and check their credentials against existing User data
-//GET if already logged in, set user data to current
 module.exports = router

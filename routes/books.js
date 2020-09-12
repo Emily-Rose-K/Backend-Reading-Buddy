@@ -5,12 +5,9 @@ const readerExperience = require("../models/ReaderExperience");
 const Book = require("../models/Book");
 const User = require("../models/User");
 
-//const SEEDFILE = require('../seed2.js'); 
 const BIG_OL_LIST = require('../seed2.js');
 
 router.get('/', (req, res) => {
-    let titleRegex = `*${req.query.title}*`
-    let authorRegex = `*${req.query.author}*`
     Book.find({title: { $regex: req.query.title, $options: 'i' }, author: { $regex: req.query.author, $options: 'i'}})
         .limit(10)
         .then(books => {
@@ -23,7 +20,6 @@ router.get('/', (req, res) => {
 })
 
 router.get("/:id", (req,res) => {
-    console.log(`🟣🟣🟣🟣 in book show route`)
     Book.findById(req.params.id)
         .populate([
             {
@@ -33,11 +29,6 @@ router.get("/:id", (req,res) => {
             }
         ])
         .then(bookInfo => {
-            bookInfo.readerExperiences.forEach((experience, index) => {
-                if (!experience.rating && !experience.review) {
-                    bookInfo.readerExperiences.splice(index, 1);
-                }
-            })
             console.log(`Sending response: ${JSON.stringify(bookInfo)}`)
             res.send({bookInfo});
         })
@@ -77,29 +68,5 @@ router.post("/", (req, res) => {
             console.log(`error determining whether database was previously seeded: ${err}`)
         })
 })
-
-
-// old version of Create Book - it's now handled by readerExperiences controller.
-/*
-router.post("/", (req,res) => {
-    Book.findOne({title: req.body.title})
-    .then(foundBook => {
-        if (foundBook && (foundBook.author == req.body.author)) {
-            res.redirect(`/books/${foundBook._id}`)
-        } else {
-            Book.create(req.body)
-            .then(createdBook => {
-               res.redirect(`/books/${createdBook._id}`);
-            })
-            .catch(err => {
-                res.send({error: `Error in books controller create route creating book: ${err}`})
-            })
-        }
-    })
-    .catch(err => {
-        res.send({error: `Error in books controller create route finding book: ${err}`})
-    })
-})
-*/
 
 module.exports = router;
